@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 var UserSchema = new mongoose.Schema({
   email: {
     type: String,
+    lowercase: true,
     required: true,
     minlength: 1,
     trim: true,
@@ -113,4 +114,4 @@ UserSchema.pre("save", function (next) {
 
 var User = mongoose.model("User", UserSchema);
 
-module.exports = {User}; 
+module.exports = {User};
