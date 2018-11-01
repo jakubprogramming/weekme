@@ -43,6 +43,19 @@ app.get("/tasks", authenticate, (req, res) => {
   });
 });
 
+app.get("/opentasks", authenticate, (req, res) => {
+  Task.find({
+    _user: req.user._id,
+    done: false
+  }).then((tasks) => {
+    res.send({
+      tasks
+    });
+  }, (e) => {
+    res.send(400).send(e);
+  });
+});
+
 app.get("/tasks/:id", authenticate, (req, res) => {
   var id = req.params.id;
 
