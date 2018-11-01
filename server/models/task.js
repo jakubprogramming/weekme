@@ -21,6 +21,13 @@ var Task = mongoose.model("task", {
     type: Number,
     default: null
   },
+  frame: {
+    type: String,
+    required: true,
+    minlength: 9,
+    maxlength: 13,
+    trim: true
+  },
   _user: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
