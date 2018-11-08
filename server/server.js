@@ -28,7 +28,8 @@ app.post("/tasks", authenticate, (req, res) => {
   var task = new Task({
     content: req.body.content,
     frame: req.body.frame,
-    _user: req.user._id //We have acces to the user because of our middleware function authenticate
+    _user: req.user._id, //We have acces to the user because of our middleware function authenticate
+    day: req.body.day
   });
 
   task.save().then((doc) => {
