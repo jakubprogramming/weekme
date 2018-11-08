@@ -3,6 +3,7 @@ require("./config/config.js");
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 
 const {ObjectID} = require("mongodb");
 
@@ -15,6 +16,7 @@ var app = express();
 const port = process.env.PORT;
 
 app.use(bodyParser.json());
+app.use(helmet());
 
 //TODO DO NOT ALLOW CROSS ORIGIN IN PRODUCTION
 app.use(function(req, res, next) {
