@@ -32,7 +32,8 @@ app.post("/tasks", authenticate, (req, res) => {
     content: req.body.content,
     frame: req.body.frame,
     _user: req.user._id, //We have acces to the user because of our middleware function authenticate
-    day: req.body.day
+    day: req.body.day,
+    color: req.body.color
   });
 
   task.save().then((doc) => {
@@ -114,7 +115,7 @@ app.delete("/tasks/:id", authenticate, async(req, res) => {
 
 app.patch("/tasks/:id", authenticate, (req, res) => {
   var id = req.params.id;
-  var body = _.pick(req.body, ["content", "day", "done", "frame"]);
+  var body = _.pick(req.body, ["content", "day", "done", "frame", "color"]);
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send();
@@ -182,5 +183,9 @@ app.delete("/users/me/token", authenticate, async (req, res) => {
 app.listen(port, () => {
   console.log("Started server on port ", port);
 });
+
+
+//Task Manager
+
 
 module.exports = {app};

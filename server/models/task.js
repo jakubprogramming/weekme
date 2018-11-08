@@ -24,9 +24,15 @@ var Task = mongoose.model("task", {
   frame: {
     type: String,
     required: true,
-    minlength: 9,
-    maxlength: 13,
+    minlength: 5,
+    maxlength: 6,
     trim: true
+  },
+  color: {
+    type: Number,
+    default: 0,
+    min: [0, 'Color may not be < 0'],
+    max: [15, 'Color may not be > 15']
   },
   _user: {
     type: mongoose.Schema.Types.ObjectId,
