@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, x-auth, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", 'DELETE, PUT, GET, POST, PATCH'); 
+  res.header("Access-Control-Allow-Methods", 'DELETE, PUT, GET, POST, PATCH');
   res.header("Access-Control-Expose-Headers",  "x-auth");
   next();
 });
@@ -31,7 +31,7 @@ app.post("/tasks", authenticate, (req, res) => {
 
   var task = new Task({
     content: req.body.content,
-    frame: req.body.frame,
+    position: req.body.position,
     _user: req.user._id, //We have acces to the user because of our middleware function authenticate
     reoccuring: req.body.reoccuring,
     dueAt: req.body.dueAt,
@@ -117,7 +117,7 @@ app.delete("/tasks/:id", authenticate, async(req, res) => {
 
 app.patch("/tasks/:id", authenticate, (req, res) => {
   var id = req.params.id;
-  var body = _.pick(req.body, ["content", "dueAt", "reoccuring", "done", "frame", "color"]);
+  var body = _.pick(req.body, ["content", "dueAt", "reoccuring", "done", "position", "color"]);
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send();
