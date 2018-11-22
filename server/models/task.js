@@ -7,11 +7,9 @@ var Task = mongoose.model("task", {
     minlength: 1,
     trim: true
   },
-  day: {
-    type: Number,
-    default: null,
-    min: [0, 'Day may not be < 0'],
-    max: [6, 'Day may not be > 6']
+  dueAt: {
+    type: Date,
+    default: null
   },
   done: {
     type: Boolean,

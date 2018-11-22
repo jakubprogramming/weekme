@@ -33,7 +33,7 @@ app.post("/tasks", authenticate, (req, res) => {
     content: req.body.content,
     frame: req.body.frame,
     _user: req.user._id, //We have acces to the user because of our middleware function authenticate
-    day: req.body.day,
+    dueAt: req.body.dueAt,
     color: req.body.color
   });
 
@@ -116,7 +116,7 @@ app.delete("/tasks/:id", authenticate, async(req, res) => {
 
 app.patch("/tasks/:id", authenticate, (req, res) => {
   var id = req.params.id;
-  var body = _.pick(req.body, ["content", "day", "done", "frame", "color"]);
+  var body = _.pick(req.body, ["content", "dueAt", "done", "frame", "color"]);
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send();
