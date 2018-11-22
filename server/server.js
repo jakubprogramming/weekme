@@ -23,7 +23,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, x-auth, Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", 'DELETE, PUT, GET, POST');
-  res.header("Access-Control-Expose-Headers",  "x-auth"); 
+  res.header("Access-Control-Expose-Headers",  "x-auth");
   next();
 });
 
@@ -169,7 +169,7 @@ app.post("/users/login", async (req, res) => {
     res.header("x-auth", token).send(user); //res.header lets us set a header
   } catch(e) {
     res.status(400).send();
-  };
+  }
 });
 
 app.delete("/users/me/token", authenticate, async (req, res) => {
