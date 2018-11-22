@@ -11,6 +11,10 @@ var Task = mongoose.model("task", {
     type: Date,
     default: null
   },
+  reoccuring: {
+    type: Boolean,
+    default: false
+  },  
   done: {
     type: Boolean,
     default: false
