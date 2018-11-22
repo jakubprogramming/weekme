@@ -17,10 +17,10 @@
     "body-parser": "*",
     "express": "*",
     "helmet": "*",
-    "jsonwebtoken": "^8.4.0", 
+    "jsonwebtoken": "*",
     "lodash": "*",
-    "mongodb": "^3.1.10",
-    "mongoose": "^5.3.13",
-    "validator": "^10.9.0"
+    "mongodb": "*",
+    "mongoose": "*",
+    "validator": "*"
   }
 }
