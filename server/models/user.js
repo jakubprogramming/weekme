@@ -31,6 +31,16 @@ var UserSchema = new mongoose.Schema({
       type: String,
       required: true
     }
+  }],
+  reset: [{
+    token: {
+      type: String,
+      required: false
+    },
+    validUntil: {
+      type: String,
+      required: false
+    }
   }]
 });
 
@@ -61,6 +71,16 @@ UserSchema.methods.removeToken = function (token){
       tokens: {token} //ES6 (token: token)
     }
   })
+};
+
+UserSchema.methods.requestPasswordReset = function (){
+  var user = this;
+
+  return user.update({
+    $pull: {   //$pull lets you remove Items from an array that match certain criteria
+      tokens: {token} //ES6 (token: token)
+    }
+  }) 
 };
 
 //UserSchma.statics --> adding a model method

@@ -9,10 +9,9 @@ var authenticate = (req, res, next) => {
     }
     req.user = user;
     req.token = token;
-    next();
+    next(); 
   }).catch((e) => {
     res.status(401).send();
-    //Do not call next this time. We do not want to continue execution
   });
 };
 
