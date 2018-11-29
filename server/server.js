@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, x-auth, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", 'DELETE, PUT, GET, POST, PATCH'); 
+  res.header("Access-Control-Allow-Methods", 'DELETE, PUT, GET, POST, PATCH');
   res.header("Access-Control-Expose-Headers",  "x-auth");
   next();
 });
@@ -182,14 +182,12 @@ app.delete("/users/me/token", authenticate, async (req, res) => {
   }
 });
 
-<<<<<<< Updated upstream
-=======
 app.post("/users/resetpassword", async (req, res) => {
   try {
     const body = _.pick(req.body, ["email"]);
     const user = await User.findByEmail(body.email);
 
-    
+
 
 
     sendResetPasswordMail(user);
@@ -199,7 +197,6 @@ app.post("/users/resetpassword", async (req, res) => {
   }
 });
 
->>>>>>> Stashed changes
 app.listen(port, () => {
   console.log("Started server on port ", port);
 });
