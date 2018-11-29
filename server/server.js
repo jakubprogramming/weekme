@@ -11,6 +11,7 @@ var {mongoose} = require("./db/mongoose");
 var {Task} = require("./models/task");
 var {User} = require("./models/user");
 var {authenticate} = require("./middleware/authenticate");
+var {sendResetPasswordMail} = require("./tools/EmailSender")
 
 var app = express();
 const port = process.env.PORT;
@@ -175,19 +176,10 @@ app.post("/users/resetpassword", async (req, res) => {
   try {
     const body = _.pick(req.body, ["email"]);
     const user = await User.findByEmail(body.email);
-
-    if(!user){
-      return res.status(404).send();
-    }
-
-    console.log(user.email); 
-
+    sendResetPasswordMail(user.email);
     res.status(200).send();
-
-
-
   } catch(e) {
-    res.status(400).send();
+    res.status(404).send();
   }
 });
 
