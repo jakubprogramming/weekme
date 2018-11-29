@@ -176,7 +176,7 @@ app.post("/users/resetpassword", async (req, res) => {
   try {
     const body = _.pick(req.body, ["email"]);
     const user = await User.findByEmail(body.email);
-    sendResetPasswordMail(user.email);
+    sendResetPasswordMail(user);
     res.status(200).send();
   } catch(e) {
     res.status(404).send();

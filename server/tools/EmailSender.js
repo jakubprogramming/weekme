@@ -8,13 +8,15 @@ var transporter = nodemailer.createTransport({
 })
 
 
-var sendResetPasswordMail = function(recipient){
+var sendResetPasswordMail = function(user){
 
   var mailOptions = {
       from: 'weekme <weekmeapp@gmail.com>',
-      to: recipient,
+      to: user.email,
       subject: 'Password Reset Requested',
-      text: 'Please suck my noodle'
+      text: `Please click this link to reset your password:
+             www.weekme.berlin/${user._id} \n
+             if you did not request a password change, please ignore this mail.`
   }
 
   transporter.sendMail(mailOptions, function (err, res) {
