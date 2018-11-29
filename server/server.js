@@ -11,6 +11,7 @@ var {mongoose} = require("./db/mongoose");
 var {Task} = require("./models/task");
 var {User} = require("./models/user");
 var {authenticate} = require("./middleware/authenticate");
+var {sendResetPasswordMail} = require("./tools/EmailSender")
 
 var app = express();
 const port = process.env.PORT;
@@ -31,7 +32,7 @@ app.post("/tasks", authenticate, (req, res) => {
 
   var task = new Task({
     content: req.body.content,
-    frame: req.body.frame,
+    position: req.body.position,
     _user: req.user._id, //We have acces to the user because of our middleware function authenticate
     reoccuring: req.body.reoccuring,
     dueAt: req.body.dueAt,
@@ -47,22 +48,20 @@ app.post("/tasks", authenticate, (req, res) => {
 });
 
 app.get("/tasks", authenticate, (req, res) => {
-  Task.find({
-    _user: req.user._id // Only return tasks of logged user (user reference comming from middleware function authenticate)
-  }).then((tasks) => {
-    res.send({
-      tasks
-    });
-  }, (e) => {
-    res.send(400).send(e);
-  });
-});
 
-app.get("/opentasks", authenticate, (req, res) => {
-  Task.find({
+  let filter = {
     _user: req.user._id,
-    done: false
-  }).then((tasks) => {
+  };
+
+  if(req.query.done != undefined){
+    filter.done = req.query.done; 
+  }
+
+  if(req.query.dueAt != undefined){
+    filter.dueAt = req.query.dueAt;
+  }
+
+  Task.find(filter).then((tasks) => {
     res.send({
       tasks
     });
@@ -117,7 +116,7 @@ app.delete("/tasks/:id", authenticate, async(req, res) => {
 
 app.patch("/tasks/:id", authenticate, (req, res) => {
   var id = req.params.id;
-  var body = _.pick(req.body, ["content", "dueAt", "reoccuring", "done", "frame", "color"]);
+  var body = _.pick(req.body, ["content", "dueAt", "reoccuring", "done", "position", "color"]);
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send();
@@ -187,7 +186,7 @@ app.post("/users/resetpassword", async (req, res) => {
     const body = _.pick(req.body, ["email"]);
     const user = await User.findByEmail(body.email);
 
-
+    user.requestPasswordReset();
 
 
     sendResetPasswordMail(user);

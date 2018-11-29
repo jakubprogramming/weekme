@@ -77,10 +77,10 @@ UserSchema.methods.requestPasswordReset = function (){
   var user = this;
 
   return user.update({
-    $pull: {   //$pull lets you remove Items from an array that match certain criteria
-      tokens: {token} //ES6 (token: token)
+    $set: {
+      reset: {token: "asdasdas", validUntil: "123123123123"}
     }
-  }) 
+  })
 };
 
 //UserSchma.statics --> adding a model method
@@ -115,6 +115,18 @@ UserSchema.statics.findByCredentials = function (email, password){
           else reject();
         });
     });
+  });
+};
+
+UserSchema.statics.findByEmail = function (email){
+  var User = this;
+
+  return User.findOne({email}).then((user) => {
+    if(!user){
+        return Promise.reject();
+    } else {
+      return Promise.resolve(user);
+    }
   });
 };
 

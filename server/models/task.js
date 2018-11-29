@@ -8,13 +8,13 @@ var Task = mongoose.model("task", {
     trim: true
   },
   dueAt: {
-    type: Date,
+    type: Number,
     default: null
   },
   reoccuring: {
     type: Boolean,
     default: false
-  },  
+  },
   done: {
     type: Boolean,
     default: false
@@ -23,12 +23,11 @@ var Task = mongoose.model("task", {
     type: Number,
     default: null
   },
-  frame: {
-    type: String,
+  position: {
+    type: Number,
     required: true,
-    minlength: 5,
-    maxlength: 6,
-    trim: true
+    min: [0, 'Position may not be < 0'],
+    max: [99, 'Position may not be > 9']
   },
   color: {
     type: Number,
