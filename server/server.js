@@ -48,20 +48,9 @@ app.post("/tasks", authenticate, (req, res) => {
 
 app.get("/tasks", authenticate, (req, res) => {
   Task.find({
-    _user: req.user._id // Only return tasks of logged user (user reference comming from middleware function authenticate)
-  }).then((tasks) => {
-    res.send({
-      tasks
-    });
-  }, (e) => {
-    res.send(400).send(e);
-  });
-});
-
-app.get("/opentasks", authenticate, (req, res) => {
-  Task.find({
     _user: req.user._id,
-    done: false
+    done: req.query.done,
+    dueAt: req.query.dueAt
   }).then((tasks) => {
     res.send({
       tasks
