@@ -235,7 +235,7 @@ app.post("/users/resetpassword", async (req, res) => {
     return res.status(400).send({error: e});
   });
 
-  sendResetPasswordMail(user.email, resetcode);
+  sendResetPasswordMail(user.email, resetcode, req); 
   res.status(200).send();
 
 });
