@@ -116,6 +116,16 @@ UserSchema.statics.findByCredentials = function (email, password){
   });
 };
 
+UserSchema.statics.findByResetcode = function (resetcode){
+  var User = this;
+  return User.findOne({resetcode}).then((user) => {
+    if(!user){
+        return Promise.reject();
+    }
+    return Promise.resolve(user);
+  });
+};
+
 UserSchema.statics.findByEmail = function (email){
   var User = this;
 
@@ -130,16 +140,12 @@ UserSchema.statics.findByEmail = function (email){
 
 UserSchema.pre("save", function (next) {
   var user = this;
-  if(user.isModified("password")){
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(user.password, salt, (err, hash) => {
-        user.password = hash;
-        next();
-      });
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(user.password, salt, (err, hash) => {
+      user.password = hash;
+      next();
     });
-  } else {
-    next();
-  }
+  });
 });
 
 var User = mongoose.model("User", UserSchema);

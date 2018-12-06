@@ -14,7 +14,7 @@ var sendResetPasswordMail = function(email, resetcode){
       from: 'weekme <weekmeapp@gmail.com>',
       to: email,
       subject: 'Password Reset Requested',
-      text: `Please click this link to reset your password:
+      text: `Please click this link within the next hour to reset your password:
              www.weekme.berlin/${resetcode} \n
              if you did not request a password change, please ignore this mail.`
   }

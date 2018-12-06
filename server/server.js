@@ -188,6 +188,28 @@ app.post("/users/login", async (req, res) => {
   }
 });
 
+app.post("/users/newpassword", async (req, res) => {
+
+  try {
+    const body = _.pick(req.body, ["resetcode", "password"]);
+    const user = await User.findByResetcode(body.resetcode);
+
+    if(user.resetdeadline < Date.now()){
+      return res.status(401).send();
+    }
+
+    user.password = body.password;
+    user.resetcode = null;
+    user.resetdeadline = null;
+
+    await user.save();
+    res.status(200).send();
+
+  } catch(e) {
+    res.status(400).send();
+  }
+});
+
 app.delete("/users/me/token", authenticate, async (req, res) => {
   try{
     await req.user.removeToken(req.token);
@@ -203,7 +225,7 @@ app.post("/users/resetpassword", async (req, res) => {
   let user = await User.findByEmail(body.email);
 
   const resetcode = uuidv1();
-  const resetdeadline = Date.now() + 60*1000;
+  const resetdeadline = Date.now() + 60*1000*60;
 
   User.findOneAndUpdate({email: user.email}, {$set: {resetcode, resetdeadline}}, {new: true, runValidators: true}).then((user) => {
     if(!user){
@@ -212,7 +234,7 @@ app.post("/users/resetpassword", async (req, res) => {
   }).catch((e) => {
     return res.status(400).send({error: e});
   });
- 
+
   sendResetPasswordMail(user.email, resetcode);
   res.status(200).send();
 
