@@ -32,16 +32,14 @@ var UserSchema = new mongoose.Schema({
       required: true
     }
   }],
-  reset: [{
-    token: {
-      type: String,
-      required: false
-    },
-    validUntil: {
-      type: String,
-      required: false
-    }
-  }]
+  resetcode: {
+    type: String,
+    require: false
+  },
+  resetdeadline: {
+    type: Number,
+    require: false
+  }
 });
 
 UserSchema.methods.toJSON = function () {

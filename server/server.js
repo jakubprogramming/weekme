@@ -4,6 +4,8 @@ const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const uuidv1 = require('uuid/v1');
+
 
 const {ObjectID} = require("mongodb");
 
@@ -154,7 +156,7 @@ app.patch("/taskspositions", authenticate, (req, res) => {
     });
     res.status(200).send();
   })
-}) 
+})
 
 app.post("/users", async (req, res) => {
 
@@ -196,18 +198,24 @@ app.delete("/users/me/token", authenticate, async (req, res) => {
 });
 
 app.post("/users/resetpassword", async (req, res) => {
-  try {
-    const body = _.pick(req.body, ["email"]);
-    const user = await User.findByEmail(body.email);
 
-    user.requestPasswordReset();
+  const body = _.pick(req.body, ["email"]);
+  let user = await User.findByEmail(body.email);
 
+  const resetcode = uuidv1();
+  const resetdeadline = Date.now() + 60*1000;
 
-    sendResetPasswordMail(user);
-    res.status(200).send();
-  } catch(e) {
-    res.status(404).send();
-  }
+  User.findOneAndUpdate({email: user.email}, {$set: {resetcode, resetdeadline}}, {new: true, runValidators: true}).then((user) => {
+    if(!user){
+      return res.status(404).send();
+    }
+  }).catch((e) => {
+    return res.status(400).send({error: e});
+  });
+ 
+  sendResetPasswordMail(user.email, resetcode);
+  res.status(200).send();
+
 });
 
 app.listen(port, () => {

@@ -23,6 +23,7 @@
     "mongoose": "*",
     "nodemailer": "^4.7.0",
     "sendmail": "^1.4.1",
+    "uuid": "^3.3.2",
     "validator": "*",
     "xoauth2": "^1.2.0"
   },
