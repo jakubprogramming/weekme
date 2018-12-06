@@ -10,7 +10,9 @@ var transporter = nodemailer.createTransport({
 
 var sendResetPasswordMail = function(email, resetcode, req){
 
-  const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
+  // const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
+
+  const url = "http://localhost:8080/resetpassword/" + resetcode;  
 
   var mailOptions = {
       from: 'weekme <weekmeapp@gmail.com>',
