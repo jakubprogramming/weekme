@@ -12,9 +12,9 @@ var sendResetPasswordMail = function(email, resetcode, req){
 
   // const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
 
-  const url = "http://localhost:8080/resetpassword.html?resetcode=" + resetcode;
+  const url = "http://localhost:8080/reset-password.html?resetcode=" + resetcode;
 
-  var mailOptions = { 
+  var mailOptions = {
       from: 'weekme <weekmeapp@gmail.com>',
       to: email,
       subject: 'Password Reset Requested',
