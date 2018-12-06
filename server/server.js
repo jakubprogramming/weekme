@@ -54,7 +54,7 @@ app.get("/tasks", authenticate, (req, res) => {
   };
 
   if(req.query.done != undefined){
-    filter.done = req.query.done; 
+    filter.done = req.query.done;
   }
 
   if(req.query.dueAt != undefined){
@@ -142,18 +142,32 @@ app.patch("/tasks/:id", authenticate, (req, res) => {
 
 })
 
+app.patch("/taskspositions", authenticate, (req, res) => {
+  const body = _.pick(req.body, ["positions"]);
+  body.positions.forEach((position) => {
+    Task.findOneAndUpdate({_id: position.id}, {$set: position}, {new: true, runValidators: true}).then((task) => {
+      if(!task){
+        return res.status(404).send();
+      }
+    }).catch((e) => {
+      return res.status(400).send({error: e});
+    });
+    res.status(200).send();
+  })
+}) 
+
 app.post("/users", async (req, res) => {
 
-try {
-  var body = _.pick(req.body, ["email", "password"]);
-  var user = new User(body);
-  await user.save();
-  const token = await user.generateAuthToken();
-  res.header("x-auth", token).send(user);
+  try {
+    var body = _.pick(req.body, ["email", "password"]);
+    var user = new User(body);
+    await user.save();
+    const token = await user.generateAuthToken();
+    res.header("x-auth", token).send(user);
 
-} catch(e) {
-  res.status(400).send(e);
-}
+  } catch(e) {
+    res.status(400).send(e);
+  }
 
 });
 
