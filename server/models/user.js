@@ -129,7 +129,7 @@ UserSchema.statics.findByResetcode = function (resetcode){
 UserSchema.statics.findByEmail = function (email){
   var User = this;
 
-  debugger; 
+
 
   return User.findOne({email}).then((user) => {
     if(!user){
@@ -139,16 +139,6 @@ UserSchema.statics.findByEmail = function (email){
     }
   });
 };
-
-// UserSchema.pre("save", function (next) {
-//   var user = this;
-//   bcrypt.genSalt(10, (err, salt) => {
-//     bcrypt.hash(user.password, salt, (err, hash) => {
-//       user.password = hash;
-//       next();
-//     });
-//   });
-// });
 
 UserSchema.pre("save", function (next) {
   var user = this;

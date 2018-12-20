@@ -115,7 +115,7 @@ app.delete("/tasks/:id", authenticate, async(req, res) => {
         return res.status(404).send();
       }
     }).catch((e) => {
-      return res.status(400).send({error: e}); 
+      return res.status(400).send({error: e});
     });
 
 
@@ -252,6 +252,24 @@ app.post("/users/newpassword", async (req, res) => {
 
     user.password = body.password;
     user.resetcode = null;
+    user.resetdeadline = null;
+
+    await user.save();
+    res.status(200).send();
+
+  } catch(e) {
+    res.status(400).send(e);
+  }
+});
+
+app.patch("/users/updatepassword", authenticate, async (req, res) => {
+
+  try {
+    const body = _.pick(req.body, ["password"]);
+    let user = req.user;
+
+    user.password = body.password;
+    user.resetcode = null; 
     user.resetdeadline = null;
 
     await user.save();
