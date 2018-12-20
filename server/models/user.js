@@ -129,6 +129,8 @@ UserSchema.statics.findByResetcode = function (resetcode){
 UserSchema.statics.findByEmail = function (email){
   var User = this;
 
+  debugger; 
+
   return User.findOne({email}).then((user) => {
     if(!user){
         return Promise.reject();
@@ -138,15 +140,29 @@ UserSchema.statics.findByEmail = function (email){
   });
 };
 
+// UserSchema.pre("save", function (next) {
+//   var user = this;
+//   bcrypt.genSalt(10, (err, salt) => {
+//     bcrypt.hash(user.password, salt, (err, hash) => {
+//       user.password = hash;
+//       next();
+//     });
+//   });
+// });
+
 UserSchema.pre("save", function (next) {
   var user = this;
-  bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(user.password, salt, (err, hash) => {
-      user.password = hash;
-      next();
+  if(user.isModified("password")){
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(user.password, salt, (err, hash) => {
+        user.password = hash;
+        next();
+      });
     });
+  } else {
+    next();
+  }
   });
-});
 
 var User = mongoose.model("User", UserSchema);
 
