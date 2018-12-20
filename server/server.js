@@ -32,21 +32,21 @@ app.use(function(req, res, next) {
 
 app.post("/tasks", authenticate, (req, res) => {
 
-  var task = new Task({
-    content: req.body.content,
-    position: req.body.position,
-    _user: req.user._id, //We have acces to the user because of our middleware function authenticate
-    reoccuring: req.body.reoccuring,
-    dueAt: req.body.dueAt,
-    color: req.body.color
+  Task.find({dueAt: req.body.dueAt}).then((otherTasks) => {
+    var task = new Task({
+      content: req.body.content,
+      position: otherTasks.length,
+      _user: req.user._id, //We have acces to the user because of our middleware function authenticate
+      reoccuring: req.body.reoccuring,
+      dueAt: req.body.dueAt,
+      color: req.body.color
+    });
+    task.save().then((doc) => {
+      res.send(doc); 
+    }, (e) => {
+      res.status(400).send(e);
+    })
   });
-
-  task.save().then((doc) => {
-    res.send(doc);
-  }, (e) => {
-    res.status(400).send(e);
-  })
-
 });
 
 app.get("/tasks", authenticate, (req, res) => {
@@ -146,7 +146,7 @@ app.patch("/tasks/:id", authenticate, (req, res) => {
     if(!task){
       res.status(404).send();
     }
-    res.send({task}); 
+    res.send({task});
 
   }).catch((e) => {
     res.status(400).send({error: e});
