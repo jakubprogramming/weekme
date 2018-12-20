@@ -109,6 +109,16 @@ app.delete("/tasks/:id", authenticate, async(req, res) => {
       return res.status(404).send();
     }
 
+    //Decrement position for all task that are in the same day and to the right of the one that was deleted
+    Task.updateMany({dueAt: task.dueAt, position: { $gt: task.position }}, {$inc: { position: -1}}, {new: true, runValidators: true}).then((task) => {
+      if(!task){
+        return res.status(404).send();
+      }
+    }).catch((e) => {
+      return res.status(400).send({error: e}); 
+    });
+
+
     res.send({task});
 
   } catch(e) {
@@ -185,7 +195,7 @@ app.patch("/taskposition", authenticate, (req, res) => {
       return res.status(404).send();
     }
   }).catch((e) => {
-    return res.status(400).send({error: e}); 
+    return res.status(400).send({error: e});
   });
 
   //Update the position and dueAt properties of the task that was moved
