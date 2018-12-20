@@ -158,12 +158,6 @@ app.patch("/taskspositions", authenticate, (req, res) => {
   })
 })
 
-
-
-
-//TODO _____________________ INCLUDE USER in REQUESTS FOR PATCHES
-
-
 app.patch("/taskposition", authenticate, (req, res) => {
 
   const body = _.pick(req.body, ["id", "position", "dueAt"]);
@@ -176,7 +170,7 @@ app.patch("/taskposition", authenticate, (req, res) => {
     originalDueAt = task.dueAt;
     originalPosition = task.position;
 
-    Task.updateMany({dueAt: originalDueAt, position: { $gte: originalPosition }}, {$inc: { position: -1}}, {new: true, runValidators: true}).then((task) => {
+    Task.updateMany({dueAt: originalDueAt, position: { $gt: originalPosition }}, {$inc: { position: -1}}, {new: true, runValidators: true}).then((task) => {
       if(!task){
         return res.status(404).send();
       }
@@ -185,13 +179,13 @@ app.patch("/taskposition", authenticate, (req, res) => {
     });
   });
 
-  //Increase position of each task that is next line after the one that was moved
+  //Increase position of each task that is next in line after the one that was moved
   Task.updateMany({_user: req.user._id, dueAt: body.dueAt, position: { $gte: body.position }}, {$inc: { position: 1}}, {new: true, runValidators: true}).then((task) => {
     if(!task){
       return res.status(404).send();
     }
   }).catch((e) => {
-    return res.status(400).send({error: e});
+    return res.status(400).send({error: e}); 
   });
 
   //Update the position and dueAt properties of the task that was moved
