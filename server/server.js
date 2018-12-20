@@ -88,7 +88,7 @@ app.get("/tasks/:id", authenticate, (req, res) => {
     }
     res.send({task});
   }, (e) => {
-    res.status(400).send();
+    res.status(400).send(e);
   });
 });
 
@@ -112,7 +112,7 @@ app.delete("/tasks/:id", authenticate, async(req, res) => {
     res.send({task});
 
   } catch(e) {
-    res.status(400).send();
+    res.status(400).send(e);
   }
 });
 
@@ -158,6 +158,54 @@ app.patch("/taskspositions", authenticate, (req, res) => {
   })
 })
 
+
+
+
+//TODO _____________________ INCLUDE USER in REQUESTS FOR PATCHES
+
+
+app.patch("/taskposition", authenticate, (req, res) => {
+
+  const body = _.pick(req.body, ["id", "position", "dueAt"]);
+
+  //Decrease position of each task that was behind the one that was moved
+  let originalDueAt;
+  let originalPosition;
+  Task.findOne({_id: body.id}).then((task) => {
+
+    originalDueAt = task.dueAt;
+    originalPosition = task.position;
+
+    Task.updateMany({dueAt: originalDueAt, position: { $gte: originalPosition }}, {$inc: { position: -1}}, {new: true, runValidators: true}).then((task) => {
+      if(!task){
+        return res.status(404).send();
+      }
+    }).catch((e) => {
+      return res.status(400).send({error: e});
+    });
+  });
+
+  //Increase position of each task that is next line after the one that was moved
+  Task.updateMany({dueAt: body.dueAt, position: { $gte: body.position }}, {$inc: { position: 1}}, {new: true, runValidators: true}).then((task) => {
+    if(!task){
+      return res.status(404).send();
+    }
+  }).catch((e) => {
+    return res.status(400).send({error: e});
+  });
+
+  //Update the position and dueAt properties of the task that was moved
+  Task.findOneAndUpdate({_id: body.id}, {$set: {position: body.position, dueAt: body.dueAt}}, {new: true, runValidators: true}).then((task) => {
+    if(!task){
+      return res.status(404).send();
+    }
+  }).catch((e) => {
+    return res.status(400).send({error: e});
+  });
+
+  res.status(200).send();
+})
+
 app.post("/users", async (req, res) => {
 
   try {
@@ -179,12 +227,12 @@ app.get("/users/me", authenticate, (req, res) => {
 
 app.post("/users/login", async (req, res) => {
   try {
-    const body = _.pick(req.body, ["email", "password"]); 
+    const body = _.pick(req.body, ["email", "password"]);
     const user = await User.findByCredentials(body.email, body.password);
     const token = await user.generateAuthToken();
     res.header("x-auth", token).send(user); //res.header lets us set a header
   } catch(e) {
-    res.status(400).send();
+    res.status(400).send(e);
   }
 });
 
@@ -206,7 +254,7 @@ app.post("/users/newpassword", async (req, res) => {
     res.status(200).send();
 
   } catch(e) {
-    res.status(400).send();
+    res.status(400).send(e);
   }
 });
 
@@ -215,7 +263,7 @@ app.delete("/users/me/token", authenticate, async (req, res) => {
     await req.user.removeToken(req.token);
     res.status(200).send();
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send(e);
   }
 });
 
@@ -232,7 +280,7 @@ app.post("/users/resetpassword", async (req, res) => {
     res.status(200).send();
 
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send(e);
   }
 });
 
