@@ -146,7 +146,7 @@ app.patch("/tasks/:id", authenticate, (req, res) => {
     if(!task){
       res.status(404).send();
     }
-    res.send({task});
+    res.send({task}); 
 
   }).catch((e) => {
     res.status(400).send({error: e});
@@ -217,7 +217,7 @@ app.post("/users", async (req, res) => {
     var user = new User(body);
     await user.save();
     const token = await user.generateAuthToken();
-    res.header("x-auth", token).send(user); 
+    res.header("x-auth", token).send(user);
 
   } catch(e) {
     res.status(400).send(e);
