@@ -42,7 +42,7 @@ app.post("/tasks", authenticate, (req, res) => {
       color: req.body.color
     });
     task.save().then((doc) => {
-      res.send(doc); 
+      res.send(doc);
     }, (e) => {
       res.status(400).send(e);
     })
@@ -265,10 +265,11 @@ app.post("/users/newpassword", async (req, res) => {
 app.patch("/users/updatepassword", authenticate, async (req, res) => {
 
   try {
-    const body = _.pick(req.body, ["password"]);
-    let user = req.user;
+    const body = _.pick(req.body, ["email", "oldpassword", "newpassword"]);
 
-    user.password = body.password;
+    let user = await User.findByCredentials(body.email, body.oldpassword);
+
+    user.password = body.newpassword;
     user.resetcode = null;
     user.resetdeadline = null;
 
