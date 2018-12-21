@@ -283,9 +283,14 @@ app.patch("/users/updatepassword", authenticate, async (req, res) => {
 
 app.patch("/users/updateemail", authenticate, async (req, res) => {
   try {
-    const body = _.pick(req.body, ["email"]);
+    const body = _.pick(req.body, ["newemail", "password"]);
+
     let user = req.user;
-    user.email = body.email;
+    let userByCredentials = await User.findByCredentials(user.email, body.password);
+
+    if(!userByCredentials) res.status(400).send();  
+
+    user.email = body.newemail;
     await user.save();
     res.status(200).send();
   } catch(e) {
