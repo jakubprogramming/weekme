@@ -265,13 +265,12 @@ app.post("/users/newpassword", async (req, res) => {
 app.patch("/users/updatepassword", authenticate, async (req, res) => {
 
   try {
-    const body = _.pick(req.body, ["email", "oldpassword", "newpassword"]);
+    const body = _.pick(req.body, ["oldpassword", "newpassword"]);
 
-    let user = await User.findByCredentials(body.email, body.oldpassword);
-
+    let user = req.user;
     user.password = body.newpassword;
     user.resetcode = null;
-    user.resetdeadline = null;
+    user.resetdeadline = null; 
 
     await user.save();
     res.status(200).send();
@@ -288,7 +287,7 @@ app.patch("/users/updateemail", authenticate, async (req, res) => {
     let user = req.user;
     let userByCredentials = await User.findByCredentials(user.email, body.password);
 
-    if(!userByCredentials) res.status(400).send();  
+    if(!userByCredentials) res.status(400).send();
 
     user.email = body.newemail;
     await user.save();
