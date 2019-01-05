@@ -234,7 +234,7 @@ app.post("/users/login", async (req, res) => {
     const body = _.pick(req.body, ["email", "password"]);
     const user = await User.findByCredentials(body.email, body.password);
     const token = await user.generateAuthToken();
-    res.header("x-auth", token).send(user); //res.header lets us set a header
+    res.header("x-auth", token).send(user);
   } catch(e) {
     res.status(400).send(e);
   }
@@ -270,9 +270,11 @@ app.patch("/users/updatepassword", authenticate, async (req, res) => {
     let user = req.user;
     user.password = body.newpassword;
     user.resetcode = null;
-    user.resetdeadline = null; 
+    user.resetdeadline = null;
 
-    await user.save();
+    const token = await user.generateAuthToken();
+    res.header("x-auth", token).send(user);
+
     res.status(200).send();
 
   } catch(e) {
@@ -290,7 +292,10 @@ app.patch("/users/updateemail", authenticate, async (req, res) => {
     if(!userByCredentials) res.status(400).send();
 
     user.email = body.newemail;
-    await user.save();
+
+    const token = await user.generateAuthToken(); 
+    res.header("x-auth", token).send(user);
+
     res.status(200).send();
   } catch(e) {
     res.status(400).send(e);
