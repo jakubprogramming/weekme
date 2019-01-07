@@ -267,7 +267,16 @@ app.patch("/users/updatepassword", authenticate, async (req, res) => {
   try {
     const body = _.pick(req.body, ["oldpassword", "newpassword"]);
 
-    let user = req.user;
+    let email = req.user.email;
+
+
+    let user = await User.findByCredentials(email, body.oldpassword); 
+
+    if(!user){
+      return res.status(400).send();
+    }
+
+
     user.password = body.newpassword;
     user.resetcode = null;
     user.resetdeadline = null;
@@ -293,7 +302,7 @@ app.patch("/users/updateemail", authenticate, async (req, res) => {
 
     user.email = body.newemail;
 
-    const token = await user.generateAuthToken(); 
+    const token = await user.generateAuthToken();
     res.header("x-auth", token).send(user);
 
     res.status(200).send();
