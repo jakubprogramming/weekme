@@ -5,8 +5,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const uuidv1 = require('uuid/v1');
+const cors = require('cors');
+app.use(cors());
 
-
+ 
 const {ObjectID} = require("mongodb");
 
 var {mongoose} = require("./db/mongoose");
@@ -270,7 +272,7 @@ app.patch("/users/updatepassword", authenticate, async (req, res) => {
     let email = req.user.email;
 
 
-    let user = await User.findByCredentials(email, body.oldpassword); 
+    let user = await User.findByCredentials(email, body.oldpassword);
 
     if(!user){
       return res.status(400).send();
