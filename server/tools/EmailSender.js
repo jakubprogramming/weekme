@@ -3,16 +3,17 @@ var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: 'weekmeapp@gmail.com',
-      pass: process.env.GMAILPASSWORD
+      pass: "denjaZ-vunfyn-jerma1"
+      // pass: process.env.GMAILPASSWORD 
     }
 })
 
 
 var sendResetPasswordMail = function(email, resetcode, req){
 
-  // const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
+  const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
 
-  const url = "http://localhost:8080/reset-password.html?resetcode=" + resetcode;
+  // const url = "http://localhost:8080/reset-password.html?resetcode=" + resetcode;
 
   var mailOptions = {
       from: 'weekme <weekmeapp@gmail.com>',
