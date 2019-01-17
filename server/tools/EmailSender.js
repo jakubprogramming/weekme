@@ -10,9 +10,9 @@ var transporter = nodemailer.createTransport({
 
 var sendResetPasswordMail = function(email, resetcode, req){
 
-  const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
+  // const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
 
-  // const url = "http://localhost:8080/reset-password.html?resetcode=" + resetcode;
+  const url = "https://weekme.netlify.com/reset-password.html?resetcode=" + resetcode;  
 
   var mailOptions = {
       from: 'weekme <weekmeapp@gmail.com>',
