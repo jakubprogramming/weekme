@@ -4,11 +4,8 @@ const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-const uuidv1 = require('uuid/v1');
-const cors = require('cors');
-app.use(cors());
+const uuidv1 = require('uuid/v1'); 
 
- 
 const {ObjectID} = require("mongodb");
 
 var {mongoose} = require("./db/mongoose");
