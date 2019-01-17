@@ -10,6 +10,9 @@ var transporter = nodemailer.createTransport({
 
 var sendResetPasswordMail = function(email, resetcode, req){
 
+
+  console.log(process.env.GMAILPASSWORD);  
+
   // const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
 
   const url = "http://localhost:8080/reset-password.html?resetcode=" + resetcode;
@@ -20,7 +23,7 @@ var sendResetPasswordMail = function(email, resetcode, req){
       subject: 'Password Reset Requested',
       text: `Please click this link within the next hour to reset your password:
              ${url}
-             if you did not request a password change, please ignore this mail.` 
+             if you did not request a password change, please ignore this mail.`
   }
 
   transporter.sendMail(mailOptions, function (err, res) {
