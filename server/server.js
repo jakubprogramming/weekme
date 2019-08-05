@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const uuidv1 = require('uuid/v1');
 
 const {ObjectID} = require("mongodb");
+const mongoose = require('./db/mongoose'); //This line is needed in order to initialize DB connection 
 
 var {Task} = require("./models/task");
 var {User} = require("./models/user");
@@ -25,7 +26,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, x-auth, Content-Type, Accept");
   res.header("Access-Control-Allow-Headers", "*");
   res.header("Access-Control-Allow-Methods", 'DELETE, PUT, GET, POST, PATCH');
-  res.header("Access-Control-Expose-Headers",  "x-auth"); 
+  res.header("Access-Control-Expose-Headers",  "x-auth");
   next();
 });
 
@@ -49,7 +50,6 @@ app.post("/tasks", authenticate, (req, res) => {
 });
 
 app.get("/tasks", authenticate, (req, res) => {
-
   let filter = {
     _user: req.user._id,
   };
