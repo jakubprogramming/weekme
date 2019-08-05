@@ -16,8 +16,8 @@ var sendResetPasswordMail = function(email, resetcode, req){
            if you did not request a password change, please ignore this mail.`,
   };
   sgMail.send(msg);
+}
 
 module.exports = {
   sendResetPasswordMail
 }
- 
