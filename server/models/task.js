@@ -33,7 +33,7 @@ var Task = mongoose.model("task", {
   color: {
     type: Number,
     default: 0,
-    min: [0, 'Color may not be < 0'], 
+    min: [0, 'Color may not be < 0'],
     max: [5, 'Color may not be > 5']
   },
   _user: {
