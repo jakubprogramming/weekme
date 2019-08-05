@@ -3,7 +3,7 @@
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-var sendResetPasswordMail = function(email, resetcode, req){
+var sendResetPasswordMail = function(email, resetcode){
   // const url = req.protocol + '://' + req.get('host') + "/resetpassword/" + resetcode;
   const url = "https://weekme.netlify.com/reset-password.html?resetcode=" + resetcode;
 
