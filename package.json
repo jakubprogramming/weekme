@@ -20,7 +20,7 @@
     "express": "*",
     "helmet": "*",
     "jsonwebtoken": "*",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "mongodb": "*",
     "mongoose": "*",
     "sendmail": "^1.4.1",
